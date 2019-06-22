@@ -330,12 +330,6 @@ config.mongodb = {
   }]
 }
 
-config.candleUploader = {
-  enabled: false,
-  url: '',
-  apiKey: ''
-}
-
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                       CONFIGURING BACKTESTING
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
