@@ -238,11 +238,13 @@ Base.prototype.addIndicator = function(name, type, parameters) {
   // some indicators need a price stream, others need full candles
 }
 
-Base.prototype.advice = function(newDirection) {
+Base.prototype.advice = function(newDirection, floatBalance) {
   // ignore legacy soft advice
   if(!newDirection) {
     return;
   }
+
+  console.log('floatBalance', newDirection, floatBalance)
 
   let trigger;
   if(_.isObject(newDirection)) {
@@ -276,7 +278,9 @@ Base.prototype.advice = function(newDirection) {
     newDirection = newDirection.direction;
   }
 
-  if(newDirection === this._currentDirection) {
+  if(newDirection === this._currentDirection &&
+    newDirection !== 'float-short' &&
+    newDirection !== 'float-long') {
     return;
   }
 
@@ -290,7 +294,8 @@ Base.prototype.advice = function(newDirection) {
 
   const advice = {
     id: 'advice-' + this.propogatedAdvices,
-    recommendation: newDirection
+    recommendation: newDirection,
+    floatBalance: floatBalance
   };
 
   if(trigger) {

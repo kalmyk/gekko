@@ -38,11 +38,7 @@ const Trader = function(next) {
     log.info('\t\t', this.portfolio.asset, this.brokerConfig.asset);
     log.info('\t', 'Balance:');
     log.info('\t\t', this.balance, this.brokerConfig.currency);
-    log.info('\t', 'Exposed:');
-    log.info('\t\t',
-      this.exposed ? 'yes' : 'no',
-      `(${(this.exposure * 100).toFixed(2)}%)`
-    );
+    log.info('\t', `Exposed: (${(this.exposure * 100).toFixed(2)}%)`)
     next();
   });
 
@@ -109,8 +105,6 @@ Trader.prototype.setPortfolio = function() {
 Trader.prototype.setBalance = function() {
   this.balance = this.portfolio.currency + this.portfolio.asset * this.price;
   this.exposure = (this.portfolio.asset * this.price) / this.balance;
-  // if more than 10% of balance is in asset we are exposed
-  this.exposed = this.exposure > 0.1;
 }
 
 Trader.prototype.processCandle = function(candle, done) {
@@ -169,7 +163,15 @@ Trader.prototype.processAdvice = function(advice) {
 
   if(direction === 'buy') {
 
-    if(this.exposed) {
+    // Portfolio:
+    //     28.969850804526 USD
+    //     7.88661647 LTC
+    // Balance:
+    //     599.014489256126 USD
+    // Exposed:
+    //     yes (95.16%)
+    // if more than 10% of balance is in asset we are exposed
+    if(this.exposure > 0.1) {
       log.info('NOT buying, already exposed');
       return this.deferredEmit('tradeAborted', {
         id,
@@ -191,7 +193,7 @@ Trader.prototype.processAdvice = function(advice) {
 
   } else if(direction === 'sell') {
 
-    if(!this.exposed) {
+    if(this.exposure < 0.9) {
       log.info('NOT selling, already no exposure');
       return this.deferredEmit('tradeAborted', {
         id,

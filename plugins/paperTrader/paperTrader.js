@@ -72,7 +72,8 @@ PaperTrader.prototype.setStartBalance = function() {
 // after every succesfull trend ride we hopefully end up
 // with more BTC than we started with, this function
 // calculates Gekko's profit in %.
-PaperTrader.prototype.updatePosition = function(what) {
+PaperTrader.prototype.updatePosition = function(what, floatBalance) {
+console.log('updatePosition-what', what, floatBalance);
 
   let cost;
   let amount;
@@ -116,6 +117,8 @@ PaperTrader.prototype.now = function() {
 
 PaperTrader.prototype.processAdvice = function(advice) {
   let action;
+console.log('robin-advice', advice);
+
   if(advice.recommendation === 'short') {
     action = 'sell';
 
@@ -146,6 +149,10 @@ PaperTrader.prototype.processAdvice = function(advice) {
 
       this.createTrigger(advice);
     }
+  } else if(advice.recommendation === 'float-short') {
+    action = 'float-sell';
+  } else if(advice.recommendation === 'float-long') {
+    action = 'float-buy';
   } else {
     return log.warn(
       `[Papertrader] ignoring unknown advice recommendation: ${advice.recommendation}`
@@ -163,7 +170,7 @@ PaperTrader.prototype.processAdvice = function(advice) {
     date: advice.date,
   });
 
-  const { cost, amount, effectivePrice } = this.updatePosition(advice.recommendation);
+  const { cost, amount, effectivePrice } = this.updatePosition(advice.recommendation, advice.floatBalance);
 
   this.relayPortfolioChange();
   this.relayPortfolioValueChange();
