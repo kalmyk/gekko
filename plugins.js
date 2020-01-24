@@ -161,6 +161,17 @@ var plugins = [
     }]
   },
   {
+    name: 'autobahn router',
+    slug: 'autobahnRouter',
+    description: 'events over autobahn router Pub/Sub',
+    async: true,
+    modes: ['realtime'],
+    dependencies: [{
+      module: 'autobahn',
+      version: '18.10.2'
+    }]
+  },
+  {
     name: 'Pushbullet',
     description: 'Sends advice to pushbullet.',
     slug: 'pushbullet',

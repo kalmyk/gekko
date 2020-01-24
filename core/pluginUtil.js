@@ -80,9 +80,7 @@ var pluginHelper = {
       return next();
     }
 
-    log.info('Setting up:');
-    log.info('\t', plugin.name);
-    log.info('\t', plugin.description);
+    log.info('Setting up:', plugin.name, '('+plugin.description+')');
 
     var cannotLoad = pluginHelper.cannotLoad(plugin);
     if(cannotLoad)
